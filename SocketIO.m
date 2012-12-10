@@ -82,7 +82,8 @@ NSString* const SocketIOException = @"SocketIOException";
 @synthesize isConnected = _isConnected, 
             isConnecting = _isConnecting, 
             useSecure = _useSecure, 
-            delegate = _delegate;
+            delegate = _delegate,
+            sid = _sid;
 
 - (id) initWithDelegate:(id<SocketIODelegate>)delegate
 {
@@ -197,7 +198,7 @@ NSString* const SocketIOException = @"SocketIOException";
 
     // do not require arguments
     if (data != nil) {
-        [dict setObject:[NSArray arrayWithObject:data] forKey:@"args"];
+        [dict setObject:data forKey:@"args"];//[NSArray arrayWithObject:data]
     }
     
     SocketIOPacket *packet = [[SocketIOPacket alloc] initWithType:@"event"];
@@ -697,8 +698,8 @@ NSString* const SocketIOException = @"SocketIOException";
     // index 2 => connection timeout
     
     // get transports
-    NSString *t = [data objectAtIndex:3];
-    NSArray *transports = [t componentsSeparatedByString:@","];
+    //NSString *t = [data objectAtIndex:3];
+   // NSArray *transports = [t componentsSeparatedByString:@","];
     DEBUGLOG(@"transports: %@", transports);
     // TODO: check which transports are supported by the server
     

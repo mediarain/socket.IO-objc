@@ -21,6 +21,7 @@
 //
 
 #import "SocketIOJSONSerialization.h"
+#import "SBJsonParser.h"
 
 extern NSString * const SocketIOException;
 
@@ -28,7 +29,7 @@ extern NSString * const SocketIOException;
 @interface NSObject (SocketIOJSONSerialization)
 
 // used by both JSONKit and SBJson
-- (id) objectWithData:(NSData *)data;
+//- (id) objectWithData:(NSData *)data;
 
 // Use by JSONKit serialization
 - (NSString *) JSONString;
@@ -51,22 +52,22 @@ extern NSString * const SocketIOException;
         id object;
         
         parser = [[serializer alloc] init];
-        object = [parser objectWithData:data];
+        object = [(SBJsonParser *)parser objectWithString:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
         
         return object;
     }
     
     // try Foundation's JSON coder, available in OS X 10.7/iOS 5.0
-    serializer = NSClassFromString(@"NSJSONSerialization");
-    if (serializer) {
-        return [serializer JSONObjectWithData:data options:0 error:error];
-    }
-    
-    // lastly, try JSONKit
-    serializer = NSClassFromString(@"JSONDecoder");
-    if (serializer) {
-        return [[serializer decoder] objectWithData:data];
-    }
+//    serializer = NSClassFromString(@"NSJSONSerialization");
+//    if (serializer) {
+//        return [serializer JSONObjectWithData:data options:0 error:error];
+//    }
+//    
+//    // lastly, try JSONKit
+//    serializer = NSClassFromString(@"JSONDecoder");
+//    if (serializer) {
+//        return [[serializer decoder] objectWithData:data];
+//    }
     
     // unable to find a suitable JSON deseralizer
     [NSException raise:SocketIOException format:@"socket.IO-objc requires SBJson, JSONKit or an OS that has NSJSONSerialization."];
